@@ -17,34 +17,10 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
 
-Artisan::command('pdf', function () {
+Artisan::command('import:plantlist {path}', function ($path, \App\PlantListImport $import) {
+    $this->info("Import " . $path);
 
-    $cards = collect([
-        'J. Bohn',
-        'A. Riechert-Bohn',
-        'D. Bohn',
-        'A. Werner',
-        'K.D. Passlack',
-        'D. Bourvieg',
-        'K. Naujack',
-        'W. Schlie',
-        'W. Rudorf',
-        'I. Selk'
-    ]);
+    $import->import($path);
 
-    $pdfCreator = new \App\PDFCreator();
-
-    $pdfCreator->addFormatter(new \App\Cards\ImageFormatter(storage_path('namensschild.jpg')))->addFormatter(new \App\Cards\TextFormatter());
-
-    //$pdfCreator->makeCard("Angela Riechert-Bohn", 0, 0);
-
-    $cards->map(function ($el) {
-        return strtoupper($el);
-    })->each(function ($name, $index) use ($pdfCreator) {
-        $pdfCreator->addCardAtIndex($name, $index);
-    });
-
-    $pdfCreator->save(storage_path('test.pdf'));
-    //$this->comment('PDF erstellen');
-
-});
+    $this->info("Done!");
+})->describe('Import a new plantlist');

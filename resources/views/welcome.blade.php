@@ -24,25 +24,29 @@
                     </div>
                 @endforeach
                 <div class="row">
-                    <div class="col-md-12 text-right">
-                        <div class="pull-left text-left">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="withGraphic" value="1"> Mit Hintergrundgrafik
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="skipEmpty" value="1"> Leere Felder nicht auswerten
-                                </label>
-                            </div>
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="withGraphic" value="1"> Mit Hintergrundgrafik
+                            </label>
                         </div>
+                        <select name="backgroundGraphic" class="form-control">
+                            @foreach($files as $file)
+                                <option value="{{ $file['path'] }}">{{ $file['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="skipEmpty" value="1"> Leere Felder nicht auswerten
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-right">
                         <button type="submit" class="btn btn-primary">Namensschilder erstellen</button>
                         <button type="reset" class="btn btn-default">Zurücksetzen</button>
                     </div>
                 </div>
             </form>
-
         </div>
     </body>
 </html>
