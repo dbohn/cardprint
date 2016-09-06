@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Cards\EmptyCard;
+use App\Cards\EmptyCardFormatter;
 use App\Cards\ImageFormatter;
+use App\Cards\NameCard;
+use App\Cards\NameCardFormatter;
 use App\Cards\TextFormatter;
 use App\PDFCreator;
 use Illuminate\Http\Request;
@@ -29,29 +33,34 @@ class CardController extends Controller
 
     public function createCards(Request $request)
     {
-        $cards = collect($request->get('cards'))->zip(range(0, 9));
+        $cards = collect($request->get('cards'))->map(function ($row) {
+            return NameCard::fromRequestData($row);
+        })->zip(range(0, 9));
 
         $pdfCreator = new PDFCreator();
 
+        $image = null;
+
         if ($request->has('withGraphic')) {
-            $pdfCreator->addFormatter(new ImageFormatter(storage_path('app/' . $request->get('backgroundGraphic'))));
+            $image = storage_path('app/' . $request->get('backgroundGraphic'));
         }
 
-        $pdfCreator->addFormatter(new TextFormatter());
+        $nameCardFormatter = new NameCardFormatter($image);
+
+        $pdfCreator->addFormatterForCard(NameCard::class,
+            $nameCardFormatter);
+
+        $pdfCreator->addFormatterForCard(EmptyCard::class, new EmptyCardFormatter());
 
         if ($request->has('skipEmpty')) {
             $cards = $cards->reject(function ($row) {
                 list($card, $index) = $row;
 
-                return empty($card);
+                return $card instanceof EmptyCard;
             });
         }
 
-        $cards->map(function ($row) {
-            $row[0] = strtoupper($row[0]);
-
-            return $row;
-        })->each(function ($row) use ($pdfCreator) {
+        $cards->each(function ($row) use ($pdfCreator) {
             list($name, $index) = $row;
             $pdfCreator->addCardAtIndex($name, $index);
         });

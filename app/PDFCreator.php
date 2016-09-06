@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Cards\Card;
 use App\Cards\Formatter;
 use Illuminate\Support\Collection;
 use TCPDF;
@@ -89,7 +90,7 @@ class PDFCreator
         $this->pdf->AddPage();
     }
 
-    public function addCardAtIndex($name, $index)
+    public function addCardAtIndex(Card $card, $index)
     {
         $cardsPerRow = $this->cardsPerRow();
         $row = (int)($index / $cardsPerRow);
@@ -98,7 +99,7 @@ class PDFCreator
         $xPos = $this->leftPageMargin + $column * ($this->cardWidth + $this->leftCellMargin);
         $yPos = $this->topPageMargin + $row * ($this->cardHeight + $this->topCellMargin);
 
-        $this->makeCard($name, $xPos, $yPos);
+        $this->makeCard($card, $xPos, $yPos);
     }
 
     /**
@@ -114,17 +115,22 @@ class PDFCreator
     /**
      * Create a card at the given position for the provided name
      *
-     * @param $name
-     * @param $xPos
-     * @param $yPos
+     * @param Card $card
+     * @param      $xPos
+     * @param      $yPos
+     *
      */
-    public function makeCard($name, $xPos, $yPos)
+    public function makeCard(Card $card, $xPos, $yPos)
     {
-        $creator = $this;
 
-        $this->formatters->each(function (Formatter $formatter) use ($creator, $name, $xPos, $yPos) {
-            $formatter->formatCard($creator, $name, $xPos, $yPos);
-        });
+        $cardType = get_class($card);
+
+        $this->formatters[$cardType]->formatCard($this, $card, $xPos, $yPos);
+    }
+
+    public function addFormatterForCard($card, Formatter $formatter)
+    {
+        $this->formatters[$card] = $formatter;
     }
 
     public function save($filename, $mode = 'F')

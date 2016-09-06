@@ -19,7 +19,15 @@
                     <div class="row">
                         @foreach($row as $cell)
                             <div class="col-md-6 form-group">
-                                <input type="text" class="form-control" name="cards[{{ $cell }}]" placeholder="Namensschild {{ $cell }}">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="cards[{{ $cell }}][gender]" value="male" checked> Herr
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="cards[{{ $cell }}][gender]" value="female"> Frau
+                                    </label>
+                                </div>
+                                <input type="text" class="form-control" name="cards[{{ $cell }}][name]" placeholder="Namensschild {{ $cell }}">
                             </div>
                         @endforeach
                     </div>

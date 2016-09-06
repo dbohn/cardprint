@@ -4,7 +4,7 @@ namespace App\Cards;
 
 use App\PDFCreator;
 
-interface Card
+class EmptyCard implements Card
 {
 
 }
