@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -34,5 +35,18 @@ class PlantList extends Model
         return collect([$this->genus_hybrid, $this->genus, $this->species_hybrid, $this->species])->reject(function ($el) {
             return empty($el);
         })->implode(" ");
+    }
+
+    /**
+     * Search for a person by name
+     *
+     * @param  Builder $query The query object
+     * @param  string  $name  The name searched for
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearchByName(Builder $query, $name)
+    {
+        return $query->whereRaw('match(genus, species) against (? in boolean mode)', [$name]);
     }
 }

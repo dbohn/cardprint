@@ -15,11 +15,16 @@ class CardController extends Controller
 
     public function index()
     {
-        $files = collect(Storage::files('backgrounds'))->map(function ($file) {
-            return ['path' => $file, 'name' => basename($file)];
-        });
+        $files = $this->findBackgroundImages();
 
         return view('welcome', compact('files'));
+    }
+
+    public function plants()
+    {
+        $files = $this->findBackgroundImages();
+
+        return view('plantcard', compact('files'));
     }
 
     public function createCards(Request $request)
@@ -52,5 +57,17 @@ class CardController extends Controller
         });
 
         $pdfCreator->save('test.pdf', 'I');
+    }
+
+    /**
+     * @return static
+     */
+    protected function findBackgroundImages()
+    {
+        $files = collect(Storage::files('backgrounds'))->map(function ($file) {
+            return ['path' => $file, 'name' => basename($file)];
+        });
+
+        return $files;
     }
 }

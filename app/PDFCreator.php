@@ -58,6 +58,7 @@ class PDFCreator
 
     /**
      * The formatters that are used to fill a card with life
+     *
      * @var Collection
      */
     protected $formatters;
@@ -73,11 +74,7 @@ class PDFCreator
         $this->pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // Set document metadata
-        // TODO: this section is quite dirty and should be configurable
-        $this->pdf->SetCreator(PDF_CREATOR);
-        $this->pdf->SetAuthor(get_current_user());
-        $this->pdf->SetTitle('Namensschilder');
-        $this->pdf->SetSubject('Namensschilder');
+        $this->setMetadata();
 
         // Disable header and footer
         $this->pdf->setPrintHeader(false);
@@ -156,5 +153,14 @@ class PDFCreator
     public function getCardHeight()
     {
         return $this->cardHeight;
+    }
+
+    protected function setMetadata()
+    {
+        // TODO: this section is quite dirty and should be configurable
+        $this->pdf->SetCreator(PDF_CREATOR);
+        $this->pdf->SetAuthor(get_current_user());
+        $this->pdf->SetTitle('Namensschilder');
+        $this->pdf->SetSubject('Namensschilder');
     }
 }

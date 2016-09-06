@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{{ url('css/app.css') }}">
     </head>
     <body>
+        @include('partials.menu')
         <div class="container">
             <h1>Namensschilder erstellen</h1>
             <form action="{{ url('cards/create') }}" method="POST">
