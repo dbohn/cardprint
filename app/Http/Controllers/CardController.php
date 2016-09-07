@@ -69,12 +69,14 @@ class CardController extends Controller
     }
 
     /**
-     * @return static
+     * @return \Illuminate\Support\Collection
      */
     protected function findBackgroundImages()
     {
         $files = collect(Storage::files('backgrounds'))->map(function ($file) {
             return ['path' => $file, 'name' => basename($file)];
+        })->reject(function ($file) {
+            return starts_with($file['name'], '.');
         });
 
         return $files;
