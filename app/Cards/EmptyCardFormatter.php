@@ -7,8 +7,19 @@ use App\PDFCreator;
 class EmptyCardFormatter implements Formatter
 {
 
-    public function formatCard(PDFCreator $creator, $name, $xPos, $yPos)
+    protected $imageFormatter;
+
+    public function __construct($backgroundImage)
     {
-        // TODO: Implement formatCard() method.
+        if ($backgroundImage !== null) {
+            $this->imageFormatter = new ImageFormatter($backgroundImage);
+        }
+    }
+
+    public function formatCard(PDFCreator $creator, $card, $xPos, $yPos)
+    {
+        if ($this->imageFormatter !== null) {
+            $this->imageFormatter->formatCard($creator, null, $xPos, $yPos);
+        }
     }
 }

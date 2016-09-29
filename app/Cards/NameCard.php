@@ -24,7 +24,12 @@ class NameCard implements Card
     public function __construct($name, $gender)
     {
         $this->name = $name;
-        $this->gender = (strtolower($gender) == 'female') ? 'female': 'male';
+        $gender = strtolower($gender);
+        if ($gender == 'company') {
+            $this->gender = 'company';
+        } else {
+            $this->gender = (strtolower($gender) == 'female') ? 'female': 'male';
+        }
     }
 
     public static function fromRequestData(array $data)
@@ -40,6 +45,10 @@ class NameCard implements Card
      */
     public function getGender()
     {
+        if ($this->gender == 'company') {
+            return 'Firma';
+        }
+
         return ($this->gender == 'female') ? 'Frau' : 'Herr';
     }
 }

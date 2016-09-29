@@ -9,6 +9,8 @@ class TextFormatter implements Formatter
 
     protected $fontSize = 24;
 
+    protected $fontFamily = 'montserrat';
+
     /**
      * @var
      */
@@ -55,12 +57,20 @@ class TextFormatter implements Formatter
         return $this;
     }
 
+    /**
+     * @param string $fontFamily
+     */
+    public function setFontFamily($fontFamily)
+    {
+        $this->fontFamily = $fontFamily;
+    }
+
     public function formatCard(PDFCreator $creator, $name, $xPos, $yPos)
     {
         $yOffset = $this->yOffset;
         $textAreaHeight = $this->textAreaHeight;
 
-        $creator->pdf->SetFont('montserrat', '', $this->fontSize, '', false);
+        $creator->pdf->SetFont($this->fontFamily, '', $this->fontSize, '', false);
 
         $creator->pdf->MultiCell($creator->getCardWidth(), $textAreaHeight, $name, 0, 'C', false, 1, $xPos, $yOffset,
             true, 0, false, true, $textAreaHeight, 'M', true);

@@ -15,11 +15,12 @@
     <h1>Pflanzenschilder erstellen</h1>
     <form action="{{ url('cards/create') }}" method="POST">
         {{ csrf_field() }}
+        <input type="hidden" name="card_type" value="plant">
         @foreach(collect(range(0,9))->chunk(2) as $row)
             <div class="row">
                 @foreach($row as $cell)
                     <div class="col-md-6 form-group">
-                        <input type="text" class="form-control" name="cards[{{ $cell }}]" placeholder="Namensschild {{ $cell }}">
+                        <input type="text" class="form-control" name="cards[{{ $cell }}][name]" placeholder="Namensschild {{ $cell }}">
                     </div>
                 @endforeach
             </div>

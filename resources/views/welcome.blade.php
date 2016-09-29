@@ -26,6 +26,9 @@
                                     <label>
                                         <input type="radio" name="cards[{{ $cell }}][gender]" value="female"> Frau
                                     </label>
+                                    <label>
+                                        <input type="radio" name="cards[{{ $cell }}][gender]" value="company"> Firma
+                                    </label>
                                 </div>
                                 <input type="text" class="form-control" name="cards[{{ $cell }}][name]" placeholder="Namensschild {{ $cell }}">
                             </div>

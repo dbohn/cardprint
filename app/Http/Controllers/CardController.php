@@ -7,6 +7,8 @@ use App\Cards\EmptyCardFormatter;
 use App\Cards\ImageFormatter;
 use App\Cards\NameCard;
 use App\Cards\NameCardFormatter;
+use App\Cards\PlantCard;
+use App\Cards\PlantCardFormatter;
 use App\Cards\TextFormatter;
 use App\PDFCreator;
 use Illuminate\Http\Request;
@@ -33,8 +35,14 @@ class CardController extends Controller
 
     public function createCards(Request $request)
     {
-        $cards = collect($request->get('cards'))->map(function ($row) {
-            return NameCard::fromRequestData($row);
+        $cardType = $request->get('card_type', 'name');
+
+        $cards = collect($request->get('cards'))->map(function ($row) use ($cardType) {
+            if ($cardType === 'name') {
+                return NameCard::fromRequestData($row);
+            }
+
+            return PlantCard::fromRequestData($row);
         })->zip(range(0, 9));
 
         $pdfCreator = new PDFCreator();
@@ -47,10 +55,14 @@ class CardController extends Controller
 
         $nameCardFormatter = new NameCardFormatter($image);
 
+        $plantCardFormatter = new PlantCardFormatter($image);
+
         $pdfCreator->addFormatterForCard(NameCard::class,
             $nameCardFormatter);
 
-        $pdfCreator->addFormatterForCard(EmptyCard::class, new EmptyCardFormatter());
+        $pdfCreator->addFormatterForCard(PlantCard::class, $plantCardFormatter);
+
+        $pdfCreator->addFormatterForCard(EmptyCard::class, new EmptyCardFormatter($image));
 
         if ($request->has('skipEmpty')) {
             $cards = $cards->reject(function ($row) {
